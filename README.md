@@ -1,2 +1,14 @@
 # chromepassXtracter
-This script extract stored password from chrome.
+The code is a Python script that decrypts and prints the saved usernames and passwords in Google Chrome browser on a Windows machine. The script uses various Python libraries, including os, json, base64, sqlite3, win32crypt, shutil, datetime and Crypto.Cipher.
+
+The script first defines two functions; get_chrome_datetime(chromedate) and get_encryption_key(). The get_chrome_datetime function takes a chrome format datetime, which is formatted as the number of microseconds since January, 1601, and returns a datetime.datetime object. The get_encryption_key function reads the encrypted key from the local state file of the Chrome browser and uses the win32crypt.CryptUnprotectData function to decrypt it.
+
+Then, the script defines another function named decrypt_password(password, key), which takes the encrypted password and the decrypted key as input arguments. This function first extracts the initialization vector (iv) from the encrypted password and removes it from the password string. Then, it generates a cipher object using the key and iv and decrypts the password using the AES encryption algorithm in GCM mode. Finally, it returns the decrypted password string. If the decryption fails, it tries to decrypt the password using win32crypt.CryptUnprotectData function.
+
+After defining the helper functions, the main() function is defined. The main() function first calls the get_encryption_key() function to get the decryption key for the Chrome browser's saved passwords. Then, it sets the database path for the Chrome browser's saved passwords and creates a copy of the database file to avoid locking the original file. Next, the script connects to the copied database file and retrieves the saved usernames and passwords from the logins table using a SQL query. For each row in the result set, the script calls the decrypt_password function to decrypt the password and prints the username, password, and other relevant details such as the URL, creation date, and last used date.
+
+Finally, the main() function closes the database connection and tries to remove the copied database file. If any errors occur while removing the file, the script ignores them using a try-except block.
+
+In summary, this Python script retrieves the saved passwords of the Google Chrome browser on a Windows machine and prints them along with their associated usernames and other relevant details. This script can be useful for users who need to retrieve their saved passwords for backup or other purposes. However, it should be noted that storing passwords in an unencrypted format, even temporarily, can pose a security risk.
+
+Disclaimer: This script is provided for educational purposes only. The use of this script for any unauthorized or illegal activities is strictly prohibited. The author is not responsible for any consequences that may arise from the use of this script. Use at your own risk.
